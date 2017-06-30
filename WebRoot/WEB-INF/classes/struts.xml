@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="ssh"  extends="struts-default" namespace="/">
+		<!-- 注册拦截器 -->
+		<interceptors>
+			<interceptor name="AuthInterceptor" class="com.pgis.interceptor.AuthInterceptor"></interceptor>
+			<!-- 自定义一个拦截器栈 myStack：含默认的拦截器：defaultStack 和 自己创建的拦截器：AuthInterceptor -->
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="AuthInterceptor">
+					<!--  AuthInterceptor继承 MethodFilterInterceptor类，所以可以使用excludeMethods将某些方法排除在拦截器之外-->
+					<param name="excludeMethods">login</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<action name="employee_*" class="employeeAction" method="{1}">
+			<!-- 使用在/toIndex.jsp页面中使用top.window.location.href="/index.jsp"跳出frame框架 -->
+			<result name="input">/toIndex.jsp</result>
+			<result name="login">/toIndex.jsp</result>
+			<result name="success" type="redirect">/frame.jsp</result>
+			<result name="findAll">/jsp/employee/list.jsp</result>
+			<result name="saveUI">/jsp/employee/add.jsp</result>
+			<result name="saveSuccess" type="redirectAction">employee_findAll.action</result>
+			<result name="editSuccess">/jsp/employee/edit.jsp</result>
+			<result name="updateSuccess" type="redirectAction">employee_findAll.action</result>
+			<result name="deleteSuccess" type="redirectAction">employee_findAll.action</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+		<action name="department_*" class="departmentAction" method="{1}">
+			<!-- 使用在/toIndex.jsp页面中使用top.window.location.href="/index.jsp"跳出frame框架 -->
+			<result name="login">/toIndex.jsp</result>
+			<result name="findAll">/jsp/department/list.jsp</result>
+			<result name="saveUI">/jsp/department/add.jsp</result>
+			<result name="saveSuccess" type="redirectAction">department_findAll.action</result>
+			<result name="updateSuccess" type="redirectAction">department_findAll.action</result>
+			<result name="deleteSuccess" type="redirectAction">department_findAll.action</result>
+			<result name="editSuccess">/jsp/department/edit.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+	</package>
+	
+</struts>

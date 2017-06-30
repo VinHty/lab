@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.pgis.domain.Department" table="department">
+		<id name="did" column="did">
+			<generator class="native"/>
+		</id>
+		<property name="dname" column="dname" length="20"/>
+		<property name="ddesc" column="ddesc" length="100"/>
+		<!-- 关联关系映射 -->
+		<!-- inverse="true":放弃维护权，放弃外键维护权，在修改的时候才能关联修改 -->
+		<!-- cascade="delete"：在执行删除(部门)时进行关联操作(同时删除部门下的员工)。注：DepartmentAction中的delete()方法删除部门，级联删除该部门下的员工，必须先查询部门-->
+		<set name="employees" cascade="delete" inverse="true">
+			<key column="dno"/>
+			<one-to-many class="com.pgis.domain.Employee"/>
+		</set>
+	</class>
+</hibernate-mapping>
